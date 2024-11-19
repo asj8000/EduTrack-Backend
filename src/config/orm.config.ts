@@ -9,7 +9,11 @@ import TaskSeeder from '../todo/task.seeder';
 
 const mainOptions: DataSourceOptions = {
   type: 'mysql',
-  url: process.env.DATABASE_URL,
+  host: 'localhost',
+  port: 3306,
+  username: 'root',
+  password: '1234',
+  database: 'edutrack',
   synchronize: false,
   migrations: [CreateTask1654578859820],
   entities: [Task],
@@ -27,8 +31,10 @@ const testOptions: DataSourceOptions & SeederOptions = {
 };
 
 // used by CLI commands
-export const AppDataSource = new DataSource({ ...testOptions, ...mainOptions });
+// export const AppDataSource = new DataSource({ ...testOptions, ...mainOptions });
 
 export default registerAs('orm', () =>
   process.env.NODE_ENV === 'test' ? testOptions : mainOptions,
 );
+
+export const AppDataSource = new DataSource(mainOptions);
