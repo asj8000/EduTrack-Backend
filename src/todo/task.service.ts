@@ -1,8 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-
 import { Task } from './task.entity';
+import { CreateTaskInput } from './create-task.input';
+import { UpdateTaskInput } from './update-task.input';
 
 @Injectable()
 export class TaskService {
@@ -11,40 +12,31 @@ export class TaskService {
     private readonly taskRepository: Repository<Task>,
   ) {}
 
-  createOne(title: string) {
-    const task = this.taskRepository.create({ title });
-
-    return this.taskRepository.save(task);
-  }
-
-  async getOne(id: Task['id']) {
-    const task = await this.taskRepository.findOneBy({ id });
-
-    if (!task) throw new NotFoundException('Task not exist');
-
-    return task;
-  }
-
-  listAll() {
+  async findAll(): Promise<Task[]> {
     return this.taskRepository.find();
   }
 
-  async updateOne(
-    id: Task['id'],
-    changes: Partial<Pick<Task, 'title' | 'completed'>>,
-  ) {
-    const task = await this.getOne(id);
+  async findOne(id: string): Promise<Task> {
+    const task = await this.taskRepository.findOne({ where: { id } });
+    if (!task) {
+      throw new NotFoundException(`Task with ID ${id} not found`);
+    }
+    return task;
+  }
 
-    this.taskRepository.merge(task, changes);
-
+  async create(input: CreateTaskInput): Promise<Task> {
+    const task = this.taskRepository.create(input);
     return this.taskRepository.save(task);
   }
 
-  async removeOne(id: Task['id']) {
-    const task = await this.getOne(id);
+  async update(id: string, input: UpdateTaskInput): Promise<Task> {
+    await this.findOne(id); // Check if exists
+    await this.taskRepository.update(id, input);
+    return this.findOne(id);
+  }
 
-    await this.taskRepository.delete({ id });
-
-    return task;
+  async delete(id: string): Promise<boolean> {
+    const result = await this.taskRepository.delete(id);
+    return result.affected ? result.affected > 0 : false;
   }
 }

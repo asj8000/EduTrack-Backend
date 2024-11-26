@@ -1,0 +1,180 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+"""콘텐츠 엔티티"""
+type Content {
+  """콘텐츠의 타입"""
+  contentType: ContentType!
+
+  """생성 일시"""
+  createdAt: DateTime!
+
+  """콘텐츠 설명"""
+  description: String
+
+  """콘텐츠의 고유 식별자"""
+  id: ID!
+
+  """콘텐츠 제목"""
+  title: String!
+
+  """수정 일시"""
+  updatedAt: DateTime!
+
+  """콘텐츠의 버전 목록"""
+  versions: [ContentVersion!]!
+}
+
+"""콘텐츠 타입을 정의하는 엔티티"""
+type ContentType {
+  """이 타입으로 생성된 콘텐츠 목록"""
+  contents: [Content!]!
+
+  """생성 일시"""
+  createdAt: DateTime!
+
+  """콘텐츠 타입의 고유 식별자"""
+  id: ID!
+
+  """콘텐츠 타입의 이름"""
+  name: String!
+
+  """콘텐츠의 구조를 정의하는 JSON 스키마"""
+  schema: String!
+
+  """수정 일시"""
+  updatedAt: DateTime!
+}
+
+"""콘텐츠 버전 엔티티"""
+type ContentVersion {
+  """연관된 콘텐츠"""
+  content: Content!
+
+  """생성 일시"""
+  createdAt: DateTime!
+
+  """버전의 실제 데이터 (JSON)"""
+  data: String!
+
+  """버전의 고유 식별자"""
+  id: ID!
+
+  """최신 버전 여부"""
+  isLatest: Boolean!
+
+  """수정 일시"""
+  updatedAt: DateTime!
+
+  """버전 문자열 (예: 1.0.0)"""
+  version: String!
+}
+
+input CreateContentInput {
+  """콘텐츠 타입 ID"""
+  contentTypeId: ID!
+
+  """콘텐츠 데이터 (JSON)"""
+  data: String!
+
+  """콘텐츠 설명"""
+  description: String
+
+  """콘텐츠 제목"""
+  title: String!
+}
+
+input CreateContentTypeInput {
+  """콘텐츠 타입의 이름"""
+  name: String!
+
+  """콘텐츠 타입의 JSON 스키마"""
+  schema: String!
+}
+
+input CreateContentVersionInput {
+  contentId: ID!
+  data: String!
+  version: String!
+}
+
+input CreateTaskInput {
+  completed: Boolean!
+  description: String
+  title: String!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Mutation {
+  createContent(input: CreateContentInput!): Content!
+  createContentType(input: CreateContentTypeInput!): ContentType!
+  createContentVersion(input: CreateContentVersionInput!): ContentVersion!
+  createTask(input: CreateTaskInput!): Task!
+  deleteContent(id: ID!): Boolean!
+  deleteContentType(id: ID!): Boolean!
+  deleteTask(id: ID!): Boolean!
+  updateContent(id: ID!, input: UpdateContentInput!): Content!
+  updateContentType(id: ID!, input: UpdateContentTypeInput!): ContentType!
+  updateTask(id: ID!, input: UpdateTaskInput!): Task!
+}
+
+input PaginationInput {
+  """페이지당 항목 수"""
+  limit: Int! = 10
+
+  """페이지 번호"""
+  page: Int! = 1
+}
+
+type Query {
+  content(id: ID!): Content!
+  contentType(id: ID!): ContentType!
+  contentTypes(pagination: PaginationInput!): [ContentType!]!
+  contents(pagination: PaginationInput!, search: SearchContentInput): [Content!]!
+  task(id: ID!): Task!
+  tasks: [Task!]!
+}
+
+input SearchContentInput {
+  """콘텐츠 타입 ID"""
+  contentTypeId: String
+
+  """검색 종료 날짜"""
+  endDate: DateTime
+
+  """검색 키워드"""
+  keyword: String
+
+  """검색 시작 날짜"""
+  startDate: DateTime
+}
+
+type Task {
+  completed: Boolean!
+  createdAt: DateTime!
+  id: ID!
+  title: String!
+  updatedAt: DateTime!
+}
+
+input UpdateContentInput {
+  data: String
+  description: String
+  title: String
+}
+
+input UpdateContentTypeInput {
+  name: String
+  schema: String
+}
+
+input UpdateTaskInput {
+  completed: Boolean
+  description: String
+  title: String
+}

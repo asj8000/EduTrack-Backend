@@ -2,15 +2,15 @@ import { InputType, Field, ID } from '@nestjs/graphql';
 
 @InputType()
 export class CreateContentInput {
-  @Field()
+  @Field(() => String, { description: '콘텐츠 제목' })
   title: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true, description: '콘텐츠 설명' })
   description?: string;
 
-  @Field(() => ID)
+  @Field(() => ID, { description: '콘텐츠 타입 ID' })
   contentTypeId: string;
 
-  @Field()
+  @Field(() => String, { description: '콘텐츠 데이터 (JSON)' })
   data: string;
 } 

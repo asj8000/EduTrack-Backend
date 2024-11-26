@@ -1,12 +1,16 @@
-import type { NestApplicationOptions } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-
+import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
 
-export async function bootstrap(options?: NestApplicationOptions) {
-  return NestFactory.create(AppModule, options);
-}
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  
+  app.useGlobalPipes(new ValidationPipe({
+    transform: true,
+    whitelist: true,
+    forbidNonWhitelisted: true,
+  }));
 
-if (require.main === module) {
-  void bootstrap().then((app) => app.listen(process.env.PORT ?? 3000));
+  await app.listen(3000);
 }
+bootstrap();

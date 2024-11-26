@@ -13,11 +13,11 @@ import TaskSeeder from '../todo/task.seeder';
 
 const mainOptions: DataSourceOptions = {
   type: 'mysql',
-  host: 'localhost',
+  host: process.env.DB_HOST || 'localhost',
   port: 3306,
-  username: 'root',
-  password: '1234',
-  database: 'edutrack',
+  username: process.env.DB_USERNAME || 'root',
+  password: process.env.DB_PASSWORD || '1234',
+  database: process.env.DB_DATABASE || 'edutrack',
   synchronize: false,
   migrations: [CreateTask1654578859820, CreateContentSchema1732038303591],
   entities: [Task, ContentType, Content, ContentVersion],
