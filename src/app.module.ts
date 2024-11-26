@@ -9,6 +9,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import loadORM from './config/orm.config';
 import { TodoModule } from './todo/todo.module';
+import { ContentModule } from './content/content.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { TodoModule } from './todo/todo.module';
       autoSchemaFile: join(process.cwd(), 'schema.gql'),
     }),
     TodoModule,
+    ContentModule,
   ],
   controllers: [AppController],
   providers: [AppService],
